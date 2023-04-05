@@ -51,7 +51,7 @@ public class Accounts
         {
             Account account = accounts.get(userSessionEmail);
 
-            if (account.getAccountNumber() == Integer.parseInt(userSessionId))
+            if (account.getSessionId().equalsIgnoreCase(userSessionId))
             {
                 account.deposit(Double.parseDouble(amount));
 
@@ -75,7 +75,7 @@ public class Accounts
         {
             Account account = accounts.get(userSessionEmail);
 
-            if (account.getAccountNumber() == Integer.parseInt(userSessionId))
+            if (account.getSessionId().equalsIgnoreCase(userSessionId))
             {
 
                 if(account.getBalance()>=Double.parseDouble(amount))
@@ -111,7 +111,7 @@ public class Accounts
         try{
             Account account = accounts.get(userSessionEmail);
 
-            if (account.getAccountNumber() == Integer.parseInt(userSessionId))
+            if (account.getSessionId().equalsIgnoreCase(userSessionId))
             {
                 return "Account Details\nAccount Number: "+account.getAccountNumber()
                        +"\nName: "+account.getName()+"\nEmail: "+account.getEmail()
@@ -121,6 +121,31 @@ public class Accounts
             {
                 return "Authentication failed";
             }
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return "Server error: Unable to process request";
+        }
+    }
+
+    public static String transfer(String userSessionId, String userSessionEmail,String receiverAccountNumber,String receiverEmail, String amount)
+    {
+        try
+        {
+            Account fromAccount = accounts.get(userSessionEmail);
+            Account toAccount = accounts.get(receiverEmail);
+            double amountTransfer = Double.parseDouble(amount);
+
+            double fromAccountBalance = fromAccount.getBalance();
+            double toAccountBalance = toAccount.getBalance();
+
+            fromAccountBalance -= amountTransfer;
+            toAccountBalance += amountTransfer;
+
+            fromAccount.setBalance(fromAccountBalance);
+            toAccount.setBalance(toAccountBalance);
+
+            return "Funds transfer update:\nFrom:"+userSessionEmail+"\nTo:"+receiverEmail+"\nAmount:"+amount+"\n;;";
+
         }catch (Exception exception){
             exception.printStackTrace();
             return "Server error: Unable to process request";

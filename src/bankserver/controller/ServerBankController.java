@@ -4,7 +4,8 @@ import bankserver.accounts.Accounts;
 
 public class ServerBankController
 {
-    public static String deposit(String remoteSocketAddress, String valuesString){
+    public static String deposit(String remoteSocketAddress, String valuesString)
+    {
         try
         {
             String[] values = valuesString.split(";");
@@ -17,7 +18,9 @@ public class ServerBankController
             {
                 return "Unable to process request: check params";
             }
-        }catch (Exception exception){
+        }
+        catch (Exception exception)
+        {
 
             exception.printStackTrace();
 
@@ -25,7 +28,9 @@ public class ServerBankController
 
         }
     }
-    public static String withdrawal(String remoteSocketAddress, String valuesString){
+
+    public static String withdrawal(String remoteSocketAddress, String valuesString)
+    {
         try
         {
             String[] values = valuesString.split(";");
@@ -38,7 +43,9 @@ public class ServerBankController
             {
                 return "Unable to process request: check params";
             }
-        }catch (Exception exception){
+        }
+        catch (Exception exception)
+        {
 
             exception.printStackTrace();
 
@@ -47,7 +54,8 @@ public class ServerBankController
         }
     }
 
-    public static String details(String remoteSocketAddress, String valuesString){
+    public static String details(String remoteSocketAddress, String valuesString)
+    {
         try
         {
             String[] values = valuesString.split(";");
@@ -60,12 +68,36 @@ public class ServerBankController
             {
                 return "Unable to process request: check params;;";
             }
-        }catch (Exception exception){
+        }
+        catch (Exception exception)
+        {
 
             exception.printStackTrace();
 
             return "Server error: please try again.;;";
 
+        }
+    }
+
+    public static String fundTransfer(String remoteSocketAddress, String valuesString)
+    {
+        try
+        {
+            String[] values = valuesString.split(";");
+
+            if (values.length == 5)
+            {
+                return Accounts.transfer(values[0], values[1], values[2], values[3], values[4]);
+            }
+            else
+            {
+                return "Unable to process request: check params";
+            }
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+            return "Server error: please try again.";
         }
     }
 }

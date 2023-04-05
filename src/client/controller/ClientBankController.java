@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.validations.AccountValidation;
 import client.validations.BankValidation;
 import models.SocketControllers;
 import models.UserSession;
@@ -43,7 +44,7 @@ public class ClientBankController
         }
     }
 
-    public static boolean deposit(UserSession userSession, SocketControllers socketControllers)
+    public static void deposit(UserSession userSession, SocketControllers socketControllers)
     {
         try
         {
@@ -56,20 +57,16 @@ public class ClientBankController
 
             System.out.println(response);
 
-            return true;
-
         }
         catch (Exception exception)
         {
 
             exception.printStackTrace();
 
-            return false;
-
         }
     }
 
-    public static boolean withdrawal(UserSession userSession, SocketControllers socketControllers)
+    public static void withdrawal(UserSession userSession, SocketControllers socketControllers)
     {
         try
         {
@@ -86,13 +83,11 @@ public class ClientBankController
 
             System.out.println("==================================");
 
-            return true;
 
         }
         catch (Exception exception)
         {
             exception.printStackTrace();
-            return false;
         }
     }
 
@@ -115,6 +110,47 @@ public class ClientBankController
             System.out.println("==================================");
 
         }catch (Exception exception){
+            exception.printStackTrace();
+        }
+    }
+
+    public static void fundTransfer(UserSession userSession, SocketControllers socketControllers){
+        try
+        {
+            System.out.println("Enter receiver AccNo.: ");
+            String recieverAccountNo = bufferedReader.readLine();
+            while(!BankValidation.validateAccountNumber(recieverAccountNo)){
+                System.out.println("Wrong input, please enter AccNo. again: ");
+                recieverAccountNo = bufferedReader.readLine();
+            }
+
+            System.out.println("Enter receiver email: ");
+            String receiverEmail = bufferedReader.readLine();
+            while(!AccountValidation.validateEmail(receiverEmail)){
+                System.out.println("Wrong input, please enter email again: ");
+                receiverEmail = bufferedReader.readLine();
+            }
+
+            socketControllers.writer.println(socketControllers.socket.getLocalSocketAddress().toString()
+                                             + "==Bank::Transfer->" + userSession.getSessionId() + ";"
+                                             + userSession.getEmail() + ";" + recieverAccountNo + ";"
+                                             + receiverEmail + ";" + getAmount());
+
+            String response;
+
+            System.out.println("==================================");
+
+            while(!(response = socketControllers.reader.readLine()).equalsIgnoreCase(";;"))
+            {
+                System.out.println(response);
+            }
+
+            System.out.println("==================================");
+
+
+        }
+        catch (Exception exception)
+        {
             exception.printStackTrace();
         }
     }

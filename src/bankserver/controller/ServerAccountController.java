@@ -2,8 +2,6 @@ package bankserver.controller;
 
 import bankserver.accounts.Accounts;
 
-import java.util.Arrays;
-
 public class ServerAccountController
 {
     public static boolean createAccount(String remoteSocketAddress, String valuesString)
@@ -25,7 +23,7 @@ public class ServerAccountController
         }
     }
 
-    public static int loginAccount(String remoteSocketAddress, String valuesString)
+    public static String loginAccount(String remoteSocketAddress, String valuesString)
     {
         try
         {
@@ -33,17 +31,17 @@ public class ServerAccountController
 
             if (values.length == 2)
             {
-                return Accounts.getAccount(values[0], values[1]).getAccountNumber();
+                return Accounts.getAccount(values[0], values[1]).getSessionId();
             }
             else
             {
-                return -1;
+                return "-1";
             }
         }
         catch (Exception exception)
         {
             exception.printStackTrace();
-            return -1;
+            return "-1";
         }
     }
 }

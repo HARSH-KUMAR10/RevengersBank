@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 
 public class ClientAccountController
 {
-    public static boolean signUp(SocketControllers socketControllers)
+    public static void signUp(SocketControllers socketControllers)
     {
         try
         {
@@ -93,14 +93,10 @@ public class ClientAccountController
 
             System.out.println("----------------------------------------------");
 
-
-            return true;
-
         }
         catch (Exception exception)
         {
             exception.printStackTrace();
-            return false;
         }
     }
 
@@ -147,7 +143,7 @@ public class ClientAccountController
 
             if(!response.equalsIgnoreCase("-1")){
 
-                UserSession userSession = new UserSession(email,Integer.parseInt(response));
+                UserSession userSession = new UserSession(email,response);
 
                 System.out.println("Login Successful");
 
@@ -165,6 +161,8 @@ public class ClientAccountController
                         case "2" -> ClientBankController.withdrawal(userSession,socketControllers);
 
                         case "3" -> ClientBankController.getAccountDetail(userSession,socketControllers);
+
+                        case "4" -> ClientBankController.fundTransfer(userSession,socketControllers);
 
                         case "0" -> {
                             System.out.println("logging out ...\nClearing session ...");

@@ -5,6 +5,8 @@ public class Account
 {
     private static int uniqueAccountNumber = 1000;
 
+    private static String sessionId;
+
     private int accountNumber = -1;
 
     private String name;
@@ -49,32 +51,53 @@ public class Account
         return balance;
     }
 
-    public boolean checkPassword(String pin){
+    public boolean checkPassword(String pin)
+    {
         return this.pin.equals(pin);
     }
 
-    public boolean deposit(Double amountToAdd){
-        try{
-            balance+=amountToAdd;
+    public String getSessionId()
+    {
+        return sessionId;
+    }
+
+    public void setBalance(double balance)
+    {
+        this.balance = balance;
+    }
+
+    public boolean deposit(Double amountToAdd)
+    {
+        try
+        {
+            balance += amountToAdd;
             return true;
-        }catch (Exception exception){
+        }
+        catch (Exception exception)
+        {
             exception.printStackTrace();
             return false;
         }
     }
 
-    public boolean withdraw(Double amountToSubtract){
-        try{
-            balance-=amountToSubtract;
+    public boolean withdraw(Double amountToSubtract)
+    {
+        try
+        {
+            balance -= amountToSubtract;
             return true;
-        }catch (Exception exception){
+        }
+        catch (Exception exception)
+        {
             exception.printStackTrace();
             return false;
         }
     }
 
 
-    public Account(){}
+    public Account()
+    {
+    }
 
     public Account(String name, int age, String gender, String email, String pin, double balance)
     {
@@ -93,6 +116,8 @@ public class Account
             this.pin = pin;
 
             this.balance = balance;
+
+            this.sessionId = email + Math.floor(Math.random());
         }
         catch (Exception exception)
         {

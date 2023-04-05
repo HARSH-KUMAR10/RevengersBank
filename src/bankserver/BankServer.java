@@ -127,6 +127,9 @@ public class BankServer implements Server
                                 {
                                     socketControllers.writer
                                             .println(ServerBankController.details(remoteSocketAddress, apiContext[1]));
+                                }else if(api[1].equalsIgnoreCase("Transfer")){
+                                    socketControllers.writer
+                                            .println(ServerBankController.fundTransfer(remoteSocketAddress,apiContext[1]));
                                 }
                             }
                         }

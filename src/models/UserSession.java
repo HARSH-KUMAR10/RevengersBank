@@ -3,19 +3,19 @@ package models;
 public class UserSession
 {
     private String email;
-    private int sessionId;
+    private String sessionId;
 
     public String getEmail()
     {
         return email;
     }
 
-    public int getSessionId()
+    public String getSessionId()
     {
         return sessionId;
     }
 
-    public UserSession(String email, int sessionId){
+    public UserSession(String email, String sessionId){
         this.email = email;
         this.sessionId = sessionId;
     }
