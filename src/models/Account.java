@@ -5,7 +5,7 @@ public class Account
 {
     private static int uniqueAccountNumber = 1000;
 
-    private static String sessionId;
+    private String sessionId;
 
     private int accountNumber = -1;
 
@@ -75,7 +75,6 @@ public class Account
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
             return false;
         }
     }
@@ -94,10 +93,6 @@ public class Account
         }
     }
 
-
-    public Account()
-    {
-    }
 
     public Account(String name, int age, String gender, String email, String pin, double balance)
     {

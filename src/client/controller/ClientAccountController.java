@@ -60,7 +60,7 @@ public class ClientAccountController
 
             String email = userInputReader.readLine();
 
-            while (!AccountValidation.validateEmail(email))
+            while (AccountValidation.validateEmail(email))
             {
                 System.out.print("Wrong input, please enter email again: ");
 
@@ -73,7 +73,7 @@ public class ClientAccountController
 
             String pin = userInputReader.readLine();
 
-            while (!AccountValidation.validatePin(pin))
+            while (AccountValidation.validatePin(pin))
             {
                 System.out.println("Wrong input, please enter PIN(4 digit) again: ");
 
@@ -111,7 +111,7 @@ public class ClientAccountController
 
             String email = bufferedReader.readLine();
 
-            while (!AccountValidation.validateEmail(email))
+            while (AccountValidation.validateEmail(email))
             {
 
                 System.out.print("Wrong input, please enter email again: ");
@@ -124,7 +124,7 @@ public class ClientAccountController
 
             String pin = bufferedReader.readLine();
 
-            while (!AccountValidation.validatePin(pin))
+            while (AccountValidation.validatePin(pin))
             {
 
                 System.out.print("Wrong input, please enter pin again: ");
@@ -142,7 +142,6 @@ public class ClientAccountController
             System.out.println("----------------------------------------------");
 
             if(!response.equalsIgnoreCase("-1")){
-
 
                 UserSession userSession = new UserSession(email,response);
 

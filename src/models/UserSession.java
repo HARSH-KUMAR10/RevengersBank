@@ -2,8 +2,8 @@ package models;
 
 public class UserSession
 {
-    private String email;
-    private String sessionId;
+    private final String email;
+    private final String sessionId;
 
     public String getEmail()
     {

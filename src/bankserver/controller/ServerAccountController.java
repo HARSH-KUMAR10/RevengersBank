@@ -5,7 +5,7 @@ import models.Account;
 
 public class ServerAccountController
 {
-    public static boolean createAccount(String remoteSocketAddress, String valuesString)
+    public static boolean createAccount(String valuesString)
     {
         try
         {
@@ -24,7 +24,7 @@ public class ServerAccountController
         }
     }
 
-    public static String loginAccount(String remoteSocketAddress, String valuesString)
+    public static String loginAccount(String valuesString)
     {
         try
         {

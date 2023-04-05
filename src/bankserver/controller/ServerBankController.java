@@ -4,7 +4,7 @@ import bankserver.accounts.Accounts;
 
 public class ServerBankController
 {
-    public static String deposit(String remoteSocketAddress, String valuesString)
+    public static String deposit(String valuesString)
     {
         try
         {
@@ -29,7 +29,7 @@ public class ServerBankController
         }
     }
 
-    public static String withdrawal(String remoteSocketAddress, String valuesString)
+    public static String withdrawal(String valuesString)
     {
         try
         {
@@ -54,7 +54,7 @@ public class ServerBankController
         }
     }
 
-    public static String details(String remoteSocketAddress, String valuesString)
+    public static String details(String valuesString)
     {
         try
         {
@@ -79,7 +79,7 @@ public class ServerBankController
         }
     }
 
-    public static String fundTransfer(String remoteSocketAddress, String valuesString)
+    public static String fundTransfer(String valuesString)
     {
         try
         {

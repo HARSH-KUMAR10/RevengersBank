@@ -14,7 +14,7 @@ public class Accounts
         {
             Account account = new Account(name, age, gender, email, pin, balance);
 
-            return accounts.putIfAbsent(account.getEmail(), account)==null;
+            return accounts.putIfAbsent(account.getEmail(), account) == null;
         }
         catch (Exception exception)
         {
@@ -29,7 +29,7 @@ public class Accounts
         {
             Account account = accounts.get(email);
 
-            if (account!=null && account.checkPassword(pin))
+            if (account != null && account.checkPassword(pin))
             {
                 return account;
             }
@@ -53,10 +53,14 @@ public class Accounts
 
             if (account.getSessionId().equalsIgnoreCase(userSessionId))
             {
-                account.deposit(Double.parseDouble(amount));
-
-
-                return "Deposited amount. Updated balance: " + account.getBalance();
+                if (account.deposit(Double.parseDouble(amount)))
+                {
+                    return "Deposited amount. Updated balance: " + account.getBalance();
+                }
+                else
+                {
+                    return "Server error: unable to update balance";
+                }
             }
             else
             {
@@ -69,6 +73,7 @@ public class Accounts
             return "Server error: Unable to process request";
         }
     }
+
     public static String withdrawAmount(String userSessionId, String userSessionEmail, String amount)
     {
         try
@@ -78,20 +83,20 @@ public class Accounts
             if (account.getSessionId().equalsIgnoreCase(userSessionId))
             {
 
-                if(account.getBalance()>=Double.parseDouble(amount))
+                if (account.getBalance() >= Double.parseDouble(amount))
                 {
 
-                    account.withdraw(Double.parseDouble(amount));
+                    if(account.withdraw(Double.parseDouble(amount)))
+                    {
 
-                    System.out.println("================ Balance Update ================");
+                        return "Withdrawn amount. Updated balance: " + account.getBalance();
+                    }else{
+                        return "Server error: unable to update balance";
+                    }
 
-                    System.out.println("Updated balance: " + account.getBalance());
-
-                    System.out.println("================================================");
-
-                    return "Withdrawn amount. Updated balance: " + account.getBalance();
-
-                }else{
+                }
+                else
+                {
                     return "Insufficient balance.";
                 }
             }
@@ -107,46 +112,65 @@ public class Accounts
         }
     }
 
-    public static String getDetails(String userSessionId, String userSessionEmail){
-        try{
+    public static String getDetails(String userSessionId, String userSessionEmail)
+    {
+        try
+        {
             Account account = accounts.get(userSessionEmail);
 
             if (account.getSessionId().equalsIgnoreCase(userSessionId))
             {
-                return "Account Details\nAccount Number: "+account.getAccountNumber()
-                       +"\nName: "+account.getName()+"\nEmail: "+account.getEmail()
-                       +"\nBalance : "+account.getBalance()+"\n;;";
+                return "Account Details\nAccount Number: " + account.getAccountNumber()
+                       + "\nName: " + account.getName() + "\nEmail: " + account.getEmail()
+                       + "\nAge: " + account.getAge() + "\nGender: " + account.getGender()
+                       + "\nBalance : " + account.getBalance() + "\n;;";
             }
             else
             {
                 return "Authentication failed";
             }
-        }catch (Exception exception){
+        }
+        catch (Exception exception)
+        {
             exception.printStackTrace();
             return "Server error: Unable to process request";
         }
     }
 
-    public static String transfer(String userSessionId, String userSessionEmail,String receiverAccountNumber,String receiverEmail, String amount)
+    public static String transfer(String userSessionId, String userSessionEmail,
+                                  String receiverAccountNumber, String receiverEmail, String amount)
     {
         try
         {
             Account fromAccount = accounts.get(userSessionEmail);
             Account toAccount = accounts.get(receiverEmail);
-            double amountTransfer = Double.parseDouble(amount);
 
-            double fromAccountBalance = fromAccount.getBalance();
-            double toAccountBalance = toAccount.getBalance();
+            if (fromAccount != null && toAccount != null
+                && fromAccount.getSessionId().equals(userSessionId)
+                && toAccount.getAccountNumber() == Integer.parseInt(receiverAccountNumber))
+            {
+                double amountTransfer = Double.parseDouble(amount);
 
-            fromAccountBalance -= amountTransfer;
-            toAccountBalance += amountTransfer;
+                double fromAccountBalance = fromAccount.getBalance();
+                double toAccountBalance = toAccount.getBalance();
 
-            fromAccount.setBalance(fromAccountBalance);
-            toAccount.setBalance(toAccountBalance);
 
-            return "Funds transfer update:\nFrom:"+userSessionEmail+"\nTo:"+receiverEmail+"\nAmount:"+amount+"\n;;";
+                fromAccountBalance -= amountTransfer;
+                toAccountBalance += amountTransfer;
 
-        }catch (Exception exception){
+                fromAccount.setBalance(fromAccountBalance);
+                toAccount.setBalance(toAccountBalance);
+
+                return "Funds transfer update:\nFrom:" + userSessionEmail + "\nTo:" + receiverEmail + "\nAmount:" + amount + "\n;;";
+            }
+            else
+            {
+                return "Transfer failed, ";
+            }
+
+        }
+        catch (Exception exception)
+        {
             exception.printStackTrace();
             return "Server error: Unable to process request";
         }
