@@ -1,0 +1,32 @@
+package client.validations;
+
+import java.util.regex.Pattern;
+
+public class AccountValidation
+{
+    public static boolean validateName(String name)
+    {
+        return name.length() > 5 && Pattern.matches("^[A-Za-z ]+$", name);
+    }
+
+    public static boolean validateAge(String age)
+    {
+        return Pattern.matches("^\\d\\d$", age) && !age.equals("10") && !age.equals("11");
+    }
+
+    public static boolean validateGender(String genderChoice)
+    {
+        return genderChoice.equals("1") || genderChoice.equals("2");
+    }
+
+    public static boolean validateEmail(String email)
+    {
+        return Pattern.matches("^[a-zA-Z\\.]+[0-9]*@[A-Za-z]+(\\.[A-Za-z]+)+$", email);
+    }
+
+    public static boolean validatePin(String pin)
+    {
+        return Pattern.matches("^\\d\\d\\d\\d$", pin);
+    }
+
+}
