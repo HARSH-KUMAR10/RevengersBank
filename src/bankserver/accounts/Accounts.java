@@ -29,19 +29,19 @@ public class Accounts
         {
             Account account = accounts.get(email);
 
-            if (account.checkPassword(pin))
+            if (account!=null && account.checkPassword(pin))
             {
                 return account;
             }
             else
             {
-                return new Account();
+                return null;
             }
         }
         catch (Exception exception)
         {
             exception.printStackTrace();
-            return new Account();
+            return null;
         }
     }
 

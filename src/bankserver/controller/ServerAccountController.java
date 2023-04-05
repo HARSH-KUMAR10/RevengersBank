@@ -1,6 +1,7 @@
 package bankserver.controller;
 
 import bankserver.accounts.Accounts;
+import models.Account;
 
 public class ServerAccountController
 {
@@ -31,7 +32,8 @@ public class ServerAccountController
 
             if (values.length == 2)
             {
-                return Accounts.getAccount(values[0], values[1]).getSessionId();
+                Account account = Accounts.getAccount(values[0],values[1]);
+                return account!=null?account.getSessionId():"-1";
             }
             else
             {
