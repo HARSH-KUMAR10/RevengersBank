@@ -11,7 +11,7 @@ public class AccountValidation
 
     public static boolean validateAge(String age)
     {
-        return Pattern.matches("^\\d\\d$", age) && !age.equals("10") && !age.equals("11");
+        return Pattern.matches("^\\d{2}$", age) && !age.equals("10") && !age.equals("11");
     }
 
     public static boolean validateGender(String genderChoice)
@@ -21,12 +21,12 @@ public class AccountValidation
 
     public static boolean validateEmail(String email)
     {
-        return Pattern.matches("^[a-zA-Z\\.]+[0-9]*@[A-Za-z]+(\\.[A-Za-z]+)+$", email);
+        return !Pattern.matches("^[a-zA-Z.]+[0-9]*[a-zA-Z]*@[A-Za-z]+(\\.[A-Za-z]+)+$", email);
     }
 
     public static boolean validatePin(String pin)
     {
-        return Pattern.matches("^\\d\\d\\d\\d$", pin);
+        return !Pattern.matches("^\\d\\d\\d\\d$", pin);
     }
 
 }

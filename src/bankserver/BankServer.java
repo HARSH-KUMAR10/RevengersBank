@@ -97,7 +97,7 @@ public class BankServer implements Server
                             {
                                 if (api[1].equalsIgnoreCase("Create"))
                                 {
-                                    if (ServerAccountController.createAccount(remoteSocketAddress, apiContext[1]))
+                                    if (ServerAccountController.createAccount(apiContext[1]))
                                     {
                                         socketControllers.writer.println("Account created successfully");
                                     }
@@ -108,7 +108,7 @@ public class BankServer implements Server
                                 }
                                 else if (api[1].equalsIgnoreCase("Read"))
                                 {
-                                    socketControllers.writer.println(ServerAccountController.loginAccount(remoteSocketAddress, apiContext[1]));
+                                    socketControllers.writer.println(ServerAccountController.loginAccount(apiContext[1]));
                                 }
                             }
                             else if (api[0].equalsIgnoreCase("Bank"))
@@ -116,20 +116,20 @@ public class BankServer implements Server
                                 if (api[1].equalsIgnoreCase("Deposit"))
                                 {
                                     socketControllers.writer
-                                            .println(ServerBankController.deposit(remoteSocketAddress, apiContext[1]));
+                                            .println(ServerBankController.deposit(apiContext[1]));
                                 }
                                 else if (api[1].equalsIgnoreCase("Withdrawal"))
                                 {
                                     socketControllers.writer
-                                            .println(ServerBankController.withdrawal(remoteSocketAddress, apiContext[1]));
+                                            .println(ServerBankController.withdrawal(apiContext[1]));
                                 }
                                 else if (api[1].equalsIgnoreCase("Details"))
                                 {
                                     socketControllers.writer
-                                            .println(ServerBankController.details(remoteSocketAddress, apiContext[1]));
+                                            .println(ServerBankController.details(apiContext[1]));
                                 }else if(api[1].equalsIgnoreCase("Transfer")){
                                     socketControllers.writer
-                                            .println(ServerBankController.fundTransfer(remoteSocketAddress,apiContext[1]));
+                                            .println(ServerBankController.fundTransfer(apiContext[1]));
                                 }
                             }
                         }

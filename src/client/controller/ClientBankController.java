@@ -118,22 +118,22 @@ public class ClientBankController
         try
         {
             System.out.println("Enter receiver AccNo.: ");
-            String recieverAccountNo = bufferedReader.readLine();
-            while(!BankValidation.validateAccountNumber(recieverAccountNo)){
+            String receiverAccountNo = bufferedReader.readLine();
+            while(!BankValidation.validateAccountNumber(receiverAccountNo)){
                 System.out.println("Wrong input, please enter AccNo. again: ");
-                recieverAccountNo = bufferedReader.readLine();
+                receiverAccountNo = bufferedReader.readLine();
             }
 
             System.out.println("Enter receiver email: ");
             String receiverEmail = bufferedReader.readLine();
-            while(!AccountValidation.validateEmail(receiverEmail)){
+            while(AccountValidation.validateEmail(receiverEmail)){
                 System.out.println("Wrong input, please enter email again: ");
                 receiverEmail = bufferedReader.readLine();
             }
 
             socketControllers.writer.println(socketControllers.socket.getLocalSocketAddress().toString()
                                              + "==Bank::Transfer->" + userSession.getSessionId() + ";"
-                                             + userSession.getEmail() + ";" + recieverAccountNo + ";"
+                                             + userSession.getEmail() + ";" + receiverAccountNo + ";"
                                              + receiverEmail + ";" + getAmount());
 
             String response;
