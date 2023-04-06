@@ -83,12 +83,18 @@ public class Account
     {
         try
         {
-            balance -= amountToSubtract;
-            return true;
+            if (balance >= amountToSubtract)
+            {
+                balance -= amountToSubtract;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
             return false;
         }
     }
@@ -116,7 +122,7 @@ public class Account
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred: unable to create account, please try again.");
         }
     }
 }

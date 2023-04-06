@@ -8,15 +8,12 @@ import model.Utilities;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class BankServer implements Server
 {
     static int clientCount = 0;
 
     static ServerSocket bankServer;
-
-    static ConcurrentHashMap<String, SocketControllers> clients = new ConcurrentHashMap<>();
 
     public BankServer()
     {
@@ -35,7 +32,7 @@ public class BankServer implements Server
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Unable to create server, please try again.");
         }
     }
 
@@ -55,8 +52,6 @@ public class BankServer implements Server
 
                         SocketControllers socketControllers = new SocketControllers(socket);
 
-                        clients.put(socket.getRemoteSocketAddress().toString(), socketControllers);
-
                         clientCount++;
 
                         startReadingClient(socketControllers);
@@ -64,7 +59,7 @@ public class BankServer implements Server
                     }
                     catch (Exception exception)
                     {
-                        exception.printStackTrace();
+                        System.out.println("Server error: please restart server.");
                         break;
                     }
                 }
@@ -72,7 +67,7 @@ public class BankServer implements Server
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Server error: please restart server.");
         }
     }
 
@@ -116,6 +111,11 @@ public class BankServer implements Server
                                     {
                                         socketControllers.writer
                                                 .println(ServerAccountController.loginAccount(apiContext[1]));
+                                    }
+                                    else if (api[1].equalsIgnoreCase(Utilities.LOGOUT))
+                                    {
+                                        socketControllers.writer
+                                                .println(ServerAccountController.logoutAccount(apiContext[1]));
                                     }
                                     else
                                     {
@@ -170,13 +170,13 @@ public class BankServer implements Server
                 }
                 catch (Exception exception)
                 {
-                    exception.printStackTrace();
+                    System.out.println("Server error: unable to process requests.");
                 }
             }, "server-reading-client-" + clientCount).start();
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Server error: unable to process requests.");
         }
     }
 

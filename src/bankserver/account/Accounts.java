@@ -14,12 +14,11 @@ public class Accounts
         {
             Account account = new Account(name, age, gender, email, pin, balance);
 
-            return accounts.putIfAbsent(account.getEmail(), account) == null?
-                    "Account created successfully":"Account with this email already create, please login";
+            return accounts.putIfAbsent(account.getEmail(), account) == null ?
+                    "Account created successfully" : "Account with this email already create, please login";
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
             return "Server error: Unable to create account.";
         }
     }
@@ -41,7 +40,6 @@ public class Accounts
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
             return null;
         }
     }
@@ -70,7 +68,6 @@ public class Accounts
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
             return "Server error: Unable to process request";
         }
     }
@@ -87,11 +84,12 @@ public class Accounts
                 if (account.getBalance() >= Double.parseDouble(amount))
                 {
 
-                    if(account.withdraw(Double.parseDouble(amount)))
+                    if (account.withdraw(Double.parseDouble(amount)))
                     {
-
                         return "Withdrawn amount. Updated balance: " + account.getBalance();
-                    }else{
+                    }
+                    else
+                    {
                         return "Server error: unable to update balance";
                     }
 
@@ -108,7 +106,6 @@ public class Accounts
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
             return "Server error: Unable to process request";
         }
     }
@@ -128,13 +125,12 @@ public class Accounts
             }
             else
             {
-                return "Authentication failed";
+                return "Authentication failed;;";
             }
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
-            return "Server error: Unable to process request";
+            return "Server error: Unable to process request;;";
         }
     }
 
@@ -153,16 +149,26 @@ public class Accounts
                 double amountTransfer = Double.parseDouble(amount);
 
                 double fromAccountBalance = fromAccount.getBalance();
+
                 double toAccountBalance = toAccount.getBalance();
 
+                if (fromAccountBalance >= amountTransfer)
+                {
 
-                fromAccountBalance -= amountTransfer;
-                toAccountBalance += amountTransfer;
+                    fromAccountBalance -= amountTransfer;
 
-                fromAccount.setBalance(fromAccountBalance);
-                toAccount.setBalance(toAccountBalance);
+                    toAccountBalance += amountTransfer;
 
-                return "Funds transfer update:\nFrom:" + userSessionEmail + "\nTo:" + receiverEmail + "\nAmount:" + amount + "\n;;";
+                    fromAccount.setBalance(fromAccountBalance);
+
+                    toAccount.setBalance(toAccountBalance);
+
+                    return "Funds transfer update:\nFrom:" + userSessionEmail + "\nTo:" + receiverEmail + "\nAmount:" + amount + "\n;;";
+                }
+                else
+                {
+                    return "Insufficient balance\n;;";
+                }
             }
             else
             {
@@ -172,7 +178,6 @@ public class Accounts
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
             return "Server error: Unable to process request";
         }
     }

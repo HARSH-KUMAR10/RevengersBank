@@ -65,14 +65,16 @@ public class ClientBankController
 
             String response = socketControllers.reader.readLine();
 
+            System.out.println(Utilities.OUTPUT_DIVIDER);
+
             System.out.println(response);
+
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
         }
         catch (Exception exception)
         {
-
-            exception.printStackTrace();
-
+            System.out.println("Error occurred, please restart.");
         }
     }
 
@@ -100,7 +102,7 @@ public class ClientBankController
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred, please restart.");
         }
     }
 
@@ -129,7 +131,7 @@ public class ClientBankController
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred, please restart.");
         }
     }
 
@@ -137,27 +139,27 @@ public class ClientBankController
     {
         try
         {
-            System.out.println("Enter Receiver AccNo.: ");
+            System.out.print("Enter Receiver AccNo.: ");
 
             String receiverAccountNo = bufferedReader.readLine();
 
             while (!BankValidation.validateAccountNumber(receiverAccountNo))
             {
 
-                System.out.println("Wrong input, Please enter AccNo. again: ");
+                System.out.print("Wrong input, Please enter AccNo. again: ");
 
                 receiverAccountNo = bufferedReader.readLine();
 
             }
 
-            System.out.println("Enter receiver email: ");
+            System.out.print("Enter receiver email: ");
 
             String receiverEmail = bufferedReader.readLine();
 
             while (AccountValidation.validateEmail(receiverEmail))
             {
 
-                System.out.println("Wrong input, please enter email again: ");
+                System.out.print("Wrong input, please enter email again: ");
 
                 receiverEmail = bufferedReader.readLine();
 
@@ -187,7 +189,7 @@ public class ClientBankController
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred, please restart.");
         }
     }
 }

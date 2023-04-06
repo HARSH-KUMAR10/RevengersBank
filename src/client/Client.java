@@ -22,7 +22,7 @@ public class Client
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Unable to connect to server, please restart.");
         }
     }
 
@@ -48,7 +48,7 @@ public class Client
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred, please restart.");
         }
 
     }

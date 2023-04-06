@@ -28,7 +28,7 @@ public class SocketControllers
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occured: please restart.");
         }
     }
 }

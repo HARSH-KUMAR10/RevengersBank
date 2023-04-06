@@ -76,7 +76,7 @@ public class ClientAccountController
 
             while (AccountValidation.validatePin(pin))
             {
-                System.out.println("Wrong input, please enter PIN(4 digit) again: ");
+                System.out.print("Wrong input, please enter PIN(4 digit) again: ");
 
                 pin = userInputReader.readLine();
             }
@@ -88,16 +88,16 @@ public class ClientAccountController
 
             String response = socketControllers.reader.readLine();
 
-            System.out.println("----------------------------------------------");
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
             System.out.println(response);
 
-            System.out.println("----------------------------------------------");
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred: please restart.");
         }
     }
 
@@ -145,7 +145,7 @@ public class ClientAccountController
 
             System.out.println(Utilities.OUTPUT_DIVIDER);
 
-            if (!response.equalsIgnoreCase("-1"))
+            if (!response.equalsIgnoreCase("-1") && !response.equalsIgnoreCase("-2"))
             {
 
                 UserSession userSession = new UserSession(email, response);
@@ -171,9 +171,16 @@ public class ClientAccountController
 
                         case "0" ->
                         {
-                            System.out.println("logging out ...\nClearing session ...");
-                            userSession = null;
-                            menuFlag = false;
+                            if (logout(socketControllers, userSession))
+                            {
+                                userSession = null;
+                                menuFlag = false;
+                                System.out.println("logging out ...\nClearing session ...");
+                            }
+                            else
+                            {
+                                System.out.println("Unable to logout.");
+                            }
                         }
                         default -> System.out.println("Wrong input");
                     }
@@ -183,16 +190,54 @@ public class ClientAccountController
             }
             else
             {
-                System.out.println("Login Failed");
+                if (response.equalsIgnoreCase("-1"))
+                {
+                    System.out.println("Login failed, check credentials");
+                }
+                else if (response.equalsIgnoreCase("-2"))
+                {
+                    System.out.println("Already logged in");
+                }
+                else
+                {
+                    System.out.println("Login failed");
+                }
             }
 
-
-            System.out.println("----------------------------------------------");
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred: please restart");
+        }
+    }
+
+
+    // Account::Logout -> /10.20.40.194:89765==Account::Logout->email;sessionId
+    public static boolean logout(SocketControllers socketControllers, UserSession userSession)
+    {
+        try
+        {
+            socketControllers.writer
+                    .println(socketControllers.socket.getLocalSocketAddress().toString()
+                             + Utilities.DOUBLE_EQUAL_DELIMITER + Utilities.API_ACTION_ACCOUNT
+                             + Utilities.DOUBLE_COLON_DELIMITER + Utilities.LOGOUT
+                             + Utilities.ARROW_DELIMITER + userSession.getEmail()
+                             + Utilities.SEMI_COLON_DELEMITER + userSession.getSessionId());
+
+            String response = socketControllers.reader.readLine();
+            if(response.equalsIgnoreCase(Utilities.LOGOUT_SUCCESS)){
+                return true;
+            }else{
+                System.out.println(response);
+                return false;
+            }
+        }
+        catch (Exception exception)
+        {
+            System.out.println("Error occurred: please restart");
+            return false;
         }
     }
 

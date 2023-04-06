@@ -40,6 +40,9 @@ public class Utilities
 
     public static final String TRANSFER = "Transfer";
 
+    public static final String LOGOUT = "Logout";
+
     public static final String OUTPUT_DIVIDER = "========================================";
 
+    public static final String LOGOUT_SUCCESS = "Logged out successfully";
 }

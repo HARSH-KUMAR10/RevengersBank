@@ -11,7 +11,7 @@ public class AccountValidation
 
     public static boolean validateAge(String age)
     {
-        return Pattern.matches("^\\d{2}$", age) && !age.equals("10") && !age.equals("11");
+        return Pattern.matches("^\\d{2}$", age) && Integer.parseInt(age) > 11;
     }
 
     public static boolean validateGender(String genderChoice)
