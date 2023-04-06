@@ -1,8 +1,8 @@
 package client;
 
 import client.controller.ClientAccountController;
-import models.SocketControllers;
-import models.Utilities;
+import model.SocketControllers;
+import model.Utilities;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

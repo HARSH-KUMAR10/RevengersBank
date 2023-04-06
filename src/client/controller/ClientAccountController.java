@@ -1,8 +1,9 @@
 package client.controller;
 
-import client.validations.AccountValidation;
-import models.SocketControllers;
-import models.UserSession;
+import model.Utilities;
+import validation.AccountValidation;
+import model.SocketControllers;
+import model.UserSession;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -135,36 +136,41 @@ public class ClientAccountController
 
             socketControllers.writer
                     .println(socketControllers.socket.getLocalSocketAddress().toString()
-                             + "==Account::Read->" + email + ";" + pin);
+                             + Utilities.DOUBLE_EQUAL_DELIMITER + Utilities.API_ACTION_ACCOUNT
+                             + Utilities.DOUBLE_COLON_DELIMITER + Utilities.READ
+                             + Utilities.ARROW_DELIMITER + email
+                             + Utilities.SEMI_COLON_DELEMITER + pin);
 
             String response = socketControllers.reader.readLine();
 
-            System.out.println("----------------------------------------------");
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
-            if(!response.equalsIgnoreCase("-1")){
+            if (!response.equalsIgnoreCase("-1"))
+            {
 
-                UserSession userSession = new UserSession(email,response);
+                UserSession userSession = new UserSession(email, response);
 
                 System.out.println("Login Successful");
 
                 boolean menuFlag = true;
 
-                while(menuFlag)
+                while (menuFlag)
                 {
 
                     System.out.print("1. Deposit\n2. Withdrawal\n3. Account Details\n4. Fund Transfer\n0. Logout\nEnter your choice: ");
 
                     switch (bufferedReader.readLine())
                     {
-                        case "1" -> ClientBankController.deposit(userSession,socketControllers);
+                        case "1" -> ClientBankController.deposit(userSession, socketControllers);
 
-                        case "2" -> ClientBankController.withdrawal(userSession,socketControllers);
+                        case "2" -> ClientBankController.withdrawal(userSession, socketControllers);
 
-                        case "3" -> ClientBankController.getAccountDetail(userSession,socketControllers);
+                        case "3" -> ClientBankController.getAccountDetail(userSession, socketControllers);
 
-                        case "4" -> ClientBankController.fundTransfer(userSession,socketControllers);
+                        case "4" -> ClientBankController.fundTransfer(userSession, socketControllers);
 
-                        case "0" -> {
+                        case "0" ->
+                        {
                             System.out.println("logging out ...\nClearing session ...");
                             userSession = null;
                             menuFlag = false;
@@ -172,8 +178,11 @@ public class ClientAccountController
                         default -> System.out.println("Wrong input");
                     }
                 }
+                System.out.println(Utilities.OUTPUT_DIVIDER);
 
-            }else{
+            }
+            else
+            {
                 System.out.println("Login Failed");
             }
 
