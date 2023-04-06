@@ -1,8 +1,8 @@
 package client;
 
 import client.controller.ClientAccountController;
-import models.SocketControllers;
-import models.Utilities;
+import model.SocketControllers;
+import model.Utilities;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,7 +22,7 @@ public class Client
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Unable to connect to server, please restart.");
         }
     }
 
@@ -48,7 +48,7 @@ public class Client
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred, please restart.");
         }
 
     }

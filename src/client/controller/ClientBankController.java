@@ -1,9 +1,10 @@
 package client.controller;
 
-import client.validations.AccountValidation;
-import client.validations.BankValidation;
-import models.SocketControllers;
-import models.UserSession;
+import model.Utilities;
+import validation.AccountValidation;
+import validation.BankValidation;
+import model.SocketControllers;
+import model.UserSession;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,7 +14,12 @@ public class ClientBankController
 
     private static final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-    private static String getAmount(){
+    private static final String DOT = ".";
+
+    private static final String DEFAULT_DECIMAL = ".00";
+
+    private static String getAmount()
+    {
         try
         {
 
@@ -21,9 +27,9 @@ public class ClientBankController
 
             String amount = bufferedReader.readLine();
 
-            if (!amount.contains("."))
+            if (!amount.contains(DOT))
             {
-                amount += ".00";
+                amount += DEFAULT_DECIMAL;
             }
 
             while (!BankValidation.validateAmount(amount))
@@ -32,15 +38,16 @@ public class ClientBankController
 
                 amount = bufferedReader.readLine();
 
-                if (!amount.contains("."))
+                if (!amount.contains(DOT))
                 {
-                    amount += ".00";
+                    amount += DEFAULT_DECIMAL;
                 }
             }
             return amount;
-        }catch (Exception exception){
-            exception.printStackTrace();
-            return "";
+        }
+        catch (Exception exception)
+        {
+            return "0.0";
         }
     }
 
@@ -50,19 +57,24 @@ public class ClientBankController
         {
 
             socketControllers.writer.println(socketControllers.socket.getLocalSocketAddress().toString()
-                                             + "==Bank::Deposit->" + userSession.getSessionId() + ";"
-                                             + userSession.getEmail() + ";" + getAmount());
+                                             + Utilities.DOUBLE_EQUAL_DELIMITER + Utilities.API_ACTION_BANK
+                                             + Utilities.DOUBLE_COLON_DELIMITER + Utilities.DEPOSIT
+                                             + Utilities.ARROW_DELIMITER + userSession.getSessionId()
+                                             + Utilities.SEMI_COLON_DELEMITER + userSession.getEmail()
+                                             + Utilities.SEMI_COLON_DELEMITER + getAmount());
 
             String response = socketControllers.reader.readLine();
 
+            System.out.println(Utilities.OUTPUT_DIVIDER);
+
             System.out.println(response);
+
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
         }
         catch (Exception exception)
         {
-
-            exception.printStackTrace();
-
+            System.out.println("Error occurred, please restart.");
         }
     }
 
@@ -72,86 +84,112 @@ public class ClientBankController
         {
 
             socketControllers.writer.println(socketControllers.socket.getLocalSocketAddress().toString()
-                                             + "==Bank::Withdrawal->" + userSession.getSessionId() + ";"
-                                             + userSession.getEmail() + ";" + getAmount());
+                                             + Utilities.DOUBLE_EQUAL_DELIMITER + Utilities.API_ACTION_BANK
+                                             + Utilities.DOUBLE_COLON_DELIMITER + Utilities.WITHDRAWAL
+                                             + Utilities.ARROW_DELIMITER + userSession.getSessionId()
+                                             + Utilities.SEMI_COLON_DELEMITER + userSession.getEmail()
+                                             + Utilities.SEMI_COLON_DELEMITER + getAmount());
 
             String response = socketControllers.reader.readLine();
 
-            System.out.println("==================================");
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
             System.out.println(response);
 
-            System.out.println("==================================");
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
 
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred, please restart.");
         }
     }
 
-    public static void getAccountDetail(UserSession userSession, SocketControllers socketControllers){
-        try{
-            socketControllers.writer
-                    .println(socketControllers.socket.getLocalSocketAddress().toString()
-                             + "==Bank::Details->" + userSession.getSessionId() + ";"
-                             + userSession.getEmail());
-
-            String response ;
-
-            System.out.println("==================================");
-
-            while(!(response = socketControllers.reader.readLine()).equalsIgnoreCase(";;"))
-            {
-                System.out.println(response);
-            }
-
-            System.out.println("==================================");
-
-        }catch (Exception exception){
-            exception.printStackTrace();
-        }
-    }
-
-    public static void fundTransfer(UserSession userSession, SocketControllers socketControllers){
+    public static void getAccountDetail(UserSession userSession, SocketControllers socketControllers)
+    {
         try
         {
-            System.out.println("Enter receiver AccNo.: ");
-            String receiverAccountNo = bufferedReader.readLine();
-            while(!BankValidation.validateAccountNumber(receiverAccountNo)){
-                System.out.println("Wrong input, please enter AccNo. again: ");
-                receiverAccountNo = bufferedReader.readLine();
-            }
-
-            System.out.println("Enter receiver email: ");
-            String receiverEmail = bufferedReader.readLine();
-            while(AccountValidation.validateEmail(receiverEmail)){
-                System.out.println("Wrong input, please enter email again: ");
-                receiverEmail = bufferedReader.readLine();
-            }
-
-            socketControllers.writer.println(socketControllers.socket.getLocalSocketAddress().toString()
-                                             + "==Bank::Transfer->" + userSession.getSessionId() + ";"
-                                             + userSession.getEmail() + ";" + receiverAccountNo + ";"
-                                             + receiverEmail + ";" + getAmount());
+            socketControllers.writer
+                    .println(socketControllers.socket.getLocalSocketAddress().toString()
+                             + Utilities.DOUBLE_EQUAL_DELIMITER + Utilities.API_ACTION_BANK
+                             + Utilities.DOUBLE_COLON_DELIMITER + Utilities.DETAILS
+                             + Utilities.ARROW_DELIMITER + userSession.getSessionId()
+                             + Utilities.SEMI_COLON_DELEMITER + userSession.getEmail());
 
             String response;
 
-            System.out.println("==================================");
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
-            while(!(response = socketControllers.reader.readLine()).equalsIgnoreCase(";;"))
+            while (!(response = socketControllers.reader.readLine()).equalsIgnoreCase(Utilities.DOUBLE_SEMI_COLON_DELEMITER))
             {
                 System.out.println(response);
             }
 
-            System.out.println("==================================");
+            System.out.println(Utilities.OUTPUT_DIVIDER);
+
+        }
+        catch (Exception exception)
+        {
+            System.out.println("Error occurred, please restart.");
+        }
+    }
+
+    public static void fundTransfer(UserSession userSession, SocketControllers socketControllers)
+    {
+        try
+        {
+            System.out.print("Enter Receiver AccNo.: ");
+
+            String receiverAccountNo = bufferedReader.readLine();
+
+            while (!BankValidation.validateAccountNumber(receiverAccountNo))
+            {
+
+                System.out.print("Wrong input, Please enter AccNo. again: ");
+
+                receiverAccountNo = bufferedReader.readLine();
+
+            }
+
+            System.out.print("Enter receiver email: ");
+
+            String receiverEmail = bufferedReader.readLine();
+
+            while (AccountValidation.validateEmail(receiverEmail))
+            {
+
+                System.out.print("Wrong input, please enter email again: ");
+
+                receiverEmail = bufferedReader.readLine();
+
+            }
+
+            socketControllers.writer.println(socketControllers.socket.getLocalSocketAddress().toString()
+                                             + Utilities.DOUBLE_EQUAL_DELIMITER + Utilities.API_ACTION_BANK
+                                             + Utilities.DOUBLE_COLON_DELIMITER + Utilities.TRANSFER
+                                             + Utilities.ARROW_DELIMITER + userSession.getSessionId()
+                                             + Utilities.SEMI_COLON_DELEMITER + userSession.getEmail()
+                                             + Utilities.SEMI_COLON_DELEMITER + receiverAccountNo
+                                             + Utilities.SEMI_COLON_DELEMITER + receiverEmail
+                                             + Utilities.SEMI_COLON_DELEMITER + getAmount());
+
+            String response;
+
+            System.out.println(Utilities.OUTPUT_DIVIDER);
+
+            while (!(response = socketControllers.reader.readLine()).equalsIgnoreCase(Utilities.DOUBLE_SEMI_COLON_DELEMITER))
+            {
+                System.out.println(response);
+            }
+
+            System.out.println(Utilities.OUTPUT_DIVIDER);
 
 
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred, please restart.");
         }
     }
 }

@@ -1,4 +1,4 @@
-package models;
+package model;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,7 +28,7 @@ public class SocketControllers
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occured: please restart.");
         }
     }
 }

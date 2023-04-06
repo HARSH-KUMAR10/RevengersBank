@@ -2,22 +2,18 @@ package bankserver;
 
 import bankserver.controller.ServerAccountController;
 import bankserver.controller.ServerBankController;
-import models.SocketControllers;
-import models.Utilities;
+import model.SocketControllers;
+import model.Utilities;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class BankServer implements Server
 {
     static int clientCount = 0;
 
     static ServerSocket bankServer;
-
-
-    static ConcurrentHashMap<String, SocketControllers> clients = new ConcurrentHashMap<>();
 
     public BankServer()
     {
@@ -36,7 +32,7 @@ public class BankServer implements Server
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Unable to create server, please try again.");
         }
     }
 
@@ -56,8 +52,6 @@ public class BankServer implements Server
 
                         SocketControllers socketControllers = new SocketControllers(socket);
 
-                        clients.put(socket.getRemoteSocketAddress().toString(), socketControllers);
-
                         clientCount++;
 
                         startReadingClient(socketControllers);
@@ -65,14 +59,15 @@ public class BankServer implements Server
                     }
                     catch (Exception exception)
                     {
-                        exception.printStackTrace();
+                        System.out.println("Server error: please restart server.");
+                        break;
                     }
                 }
             }, "read-connection-thread").start();
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Server error: please restart server.");
         }
     }
 
@@ -86,75 +81,108 @@ public class BankServer implements Server
                     while (true)
                     {
                         String request = socketControllers.reader.readLine();
-                        if (request != null && request.contains("==") && request.contains("->") && request.contains("::"))
+                        if (request != null && request.contains(Utilities.DOUBLE_EQUAL_DELIMITER)
+                            && request.contains(Utilities.ARROW_DELIMITER) && request.contains(Utilities.DOUBLE_COLON_DELIMITER))
                         {
-                            String[] requestSplit = request.split("==");
+                            String[] requestSplit = request.split(Utilities.DOUBLE_EQUAL_DELIMITER);
+
                             String remoteSocketAddress = requestSplit[0];
-                            String[] apiContext = requestSplit[1].split("->");
-                            String[] api = apiContext[0].split("::");
-                            System.out.println(remoteSocketAddress + " -> " + Arrays.toString(api));
-                            if (api[0].equalsIgnoreCase("Account"))
+
+                            String[] apiContext = requestSplit[1].split(Utilities.ARROW_DELIMITER);
+
+                            String[] api = apiContext[0].split(Utilities.DOUBLE_COLON_DELIMITER);
+
+                            if (requestSplit.length != 2 && apiContext.length != 2 && api.length != 2)
                             {
-                                if (api[1].equalsIgnoreCase("Create"))
+                                socketControllers.writer.println("Bad Request");
+                            }
+                            else
+                            {
+                                System.out.println(remoteSocketAddress + Utilities.ARROW_DELIMITER + Arrays.toString(api));
+
+                                if (api[0].equalsIgnoreCase(Utilities.API_ACTION_ACCOUNT))
                                 {
-                                    if (ServerAccountController.createAccount(apiContext[1]))
+                                    if (api[1].equalsIgnoreCase(Utilities.CREATE))
                                     {
-                                        socketControllers.writer.println("Account created successfully");
+                                        socketControllers.writer
+                                                .println(ServerAccountController.createAccount(apiContext[1]));
+                                    }
+                                    else if (api[1].equalsIgnoreCase(Utilities.READ))
+                                    {
+                                        socketControllers.writer
+                                                .println(ServerAccountController.loginAccount(apiContext[1]));
+                                    }
+                                    else if (api[1].equalsIgnoreCase(Utilities.LOGOUT))
+                                    {
+                                        socketControllers.writer
+                                                .println(ServerAccountController.logoutAccount(apiContext[1]));
                                     }
                                     else
                                     {
-                                        socketControllers.writer.println("Unable to create new account.");
+                                        socketControllers.writer
+                                                .println("Account route doesn't support this operation");
                                     }
                                 }
-                                else if (api[1].equalsIgnoreCase("Read"))
+                                else if (api[0].equalsIgnoreCase(Utilities.API_ACTION_BANK))
                                 {
-                                    socketControllers.writer.println(ServerAccountController.loginAccount(apiContext[1]));
+                                    if (api[1].equalsIgnoreCase(Utilities.DEPOSIT))
+                                    {
+                                        socketControllers.writer
+                                                .println(ServerBankController.deposit(apiContext[1]));
+                                    }
+                                    else if (api[1].equalsIgnoreCase(Utilities.WITHDRAWAL))
+                                    {
+                                        socketControllers.writer
+                                                .println(ServerBankController.withdrawal(apiContext[1]));
+                                    }
+                                    else if (api[1].equalsIgnoreCase(Utilities.DETAILS))
+                                    {
+                                        socketControllers.writer
+                                                .println(ServerBankController.details(apiContext[1]));
+                                    }
+                                    else if (api[1].equalsIgnoreCase(Utilities.TRANSFER))
+                                    {
+                                        socketControllers.writer
+                                                .println(ServerBankController.fundTransfer(apiContext[1]));
+                                    }
+                                    else
+                                    {
+                                        socketControllers.writer
+                                                .println("Bank route doesn't support this operation");
+                                    }
                                 }
-                            }
-                            else if (api[0].equalsIgnoreCase("Bank"))
-                            {
-                                if (api[1].equalsIgnoreCase("Deposit"))
+                                else
                                 {
-                                    socketControllers.writer
-                                            .println(ServerBankController.deposit(apiContext[1]));
-                                }
-                                else if (api[1].equalsIgnoreCase("Withdrawal"))
-                                {
-                                    socketControllers.writer
-                                            .println(ServerBankController.withdrawal(apiContext[1]));
-                                }
-                                else if (api[1].equalsIgnoreCase("Details"))
-                                {
-                                    socketControllers.writer
-                                            .println(ServerBankController.details(apiContext[1]));
-                                }else if(api[1].equalsIgnoreCase("Transfer")){
-                                    socketControllers.writer
-                                            .println(ServerBankController.fundTransfer(apiContext[1]));
+                                    socketControllers.writer.println("route not found");
                                 }
                             }
                         }
                         else
                         {
                             System.out.println("Unknown request:" + request + "\nClosing connection.");
-                            socketControllers.writer.println("Unable to parse request");
+
+                            socketControllers.writer
+                                    .println("Unable to parse request.");
+
                             break;
                         }
                     }
                 }
                 catch (Exception exception)
                 {
-                    exception.printStackTrace();
+                    System.out.println("Server error: unable to process requests.");
                 }
             }, "server-reading-client-" + clientCount).start();
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Server error: unable to process requests.");
         }
     }
 
     public static void main(String[] args)
     {
+        System.out.println(Utilities.WELCOME);
         new BankServer();
     }
 }

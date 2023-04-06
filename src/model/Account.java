@@ -1,4 +1,4 @@
-package models;
+package model;
 
 
 public class Account
@@ -83,12 +83,18 @@ public class Account
     {
         try
         {
-            balance -= amountToSubtract;
-            return true;
+            if (balance >= amountToSubtract)
+            {
+                balance -= amountToSubtract;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
             return false;
         }
     }
@@ -112,11 +118,11 @@ public class Account
 
             this.balance = balance;
 
-            this.sessionId = email + Math.floor(Math.random());
+            this.sessionId = email + Math.random();
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            System.out.println("Error occurred: unable to create account, please try again.");
         }
     }
 }

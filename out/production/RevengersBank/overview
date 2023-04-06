@@ -1,0 +1,58 @@
+
+--------------------------------------------------------------------------------------------------------------
+
+API:
+
+Account::Create
+input: (name;age;gender;email;pin)                                  output: (String) result
+
+Account::Read
+input: (email;pin)                                                  output: (String) sessionId:-1
+
+Bank::Deposit
+input: (sessionId;email;amount)                                     output: (String) result
+
+Bank::Withdrawal
+input: (sessionId;email;amount)                                     output: (String) result
+
+Bank::Details
+input: (sessionId;email)                                            output: (String) result
+
+Bank::Transfer
+input: (sessionId;email;receiverAccNo;receiverEmail;amount)         output: (String) result
+
+--------------------------------------------------------------------------------------------------------------
+
+Dependencies:
+
+Server & Client -> model, validation packages
+
+--------------------------------------------------------------------------------------------------------------
+
+Validation coverage:
+
+name: (minimum 5 letters) && (contain A-Z, a-z, ' ').
+
+age: (2 numbers) && (not '10' or '11')
+
+gender: ("1"->"female") || ("2"->"male")
+
+email: (characters || ".")+ (numbers)* (character)* @ (character)+ ("." | (character)+)+        [works for all common emails]
+
+pin: (4 numbers)
+
+sessionId: (minimum 1 length)
+
+amount: (numbers)+ "." + (2 numbers)
+
+accountNo: (4 numbers)
+
+--------------------------------------------------------------------------------------------------------------
+
+Considerations:
+
+no back buttons allowed
+
+considering each bank account is unique by email.
+
+--------------------------------------------------------------------------------------------------------------
